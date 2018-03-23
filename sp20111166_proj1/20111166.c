@@ -17,6 +17,7 @@ int main() {
 	while(1) {
 		printf("sicsim> ");
 		fgets(command_str, sizeof(command_str), stdin);
+		command_str[strlen(command_str)-1] = '\0';
 		token_number = tokenizer(command_str, token);
 		if(token_number == 0) continue;
 		if(token_number > 4) continue;

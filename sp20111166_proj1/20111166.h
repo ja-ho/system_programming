@@ -27,7 +27,7 @@ int list_insert(List *list, char *str, int op_code);
 int hash_function(char *s);
 void make_hashTable(List **hashTable);
 void print_list(List *list);
-void print_hashTable(List **hashTable);
+void print_op_table(List **hashTable);
 void free_list(List *list);
 void free_hashTable(List **hashTable);
 ///////////data_structure

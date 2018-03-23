@@ -3,7 +3,7 @@
 int tokenizer(char *str, char **token)
 {
 	int i=0;
-	const char *delim = " ,\t";
+	const char *delim = " ,\t\n";
 	token[i++] = strtok(str, delim);
 	while(token[i-1] != NULL) {
 		if(i >= 6) break; 
@@ -41,11 +41,11 @@ int command(unsigned char memory[][MEM_COL], List *history_list, List **op_table
 			free_hashTable(op_table);
 			exit(0);	
 		} else if (!strcmp(token[0], "hi") || !strcmp(token[0], "history")) {
-		
+			print_list(history_list);		
 		} else if (!strcmp(token[0], "reset")) {
 		
 		} else if (!strcmp(token[0], "opcodelist")) {
-			
+			print_op_table(op_table);
 		} 
 	} else if (token_number == 2) {
 	

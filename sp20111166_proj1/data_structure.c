@@ -4,7 +4,7 @@ void copy_str(char *from, char **to)
 {
 	int length = strlen(from);
 	*to = (char *)malloc(sizeof(char)*length+1);
-	strncpy(*to, from, length);
+	strncpy(*to, from, length+1);
 }
 
 
@@ -47,11 +47,11 @@ void print_list(List *list)
 	num = 1;
 	
 	while(temp->next!=NULL) {
-		printf("%d	%s", num++, temp->content);
-		printf("\n");
+		printf("%d %s\n", num++, temp->content);
 		temp = temp->next;
 	}
 	printf("%d %s\n", num++, temp->content);	//print tail
+	return;
 }
 
 
@@ -94,35 +94,34 @@ void make_hashTable(List **hashTable)
 	return;
 }
 
-void print_opTable(List **op_table)	//need to fix
+void print_op_table(List **op_table)	//print table
 {
 	int i;
 	Node *temp;
-	int hash;
 	for(i=0; i<20; i++) {
 		temp = op_table[i]->head;
-		if(temp == NULL) {
+		if(temp == NULL) {		//nothing in the list
 			printf("%d : empty\n", i);
 			continue;
 		}
-		if(temp->next != NULL) {
-			printf("%d : [%s, %x] ->", i, temp->content, temp->op_code);
-		} else {
-			printf("%d : [%s, %x]\n", i, temp->content, temp->op_code);
+		if(temp->next != NULL) {	//case1: theres' next node
+			printf("%d : [%s, %02x] ->", i, temp->content, temp->op_code);
+		} else {					//case2: no next node
+			printf("%d : [%s, %02x]\n", i, temp->content, temp->op_code);
 			continue;
 		}
 		temp = temp->next;
 		while(temp->next != NULL) {
-			printf(" [%s, %x] ->", temp->content, temp->op_code);
+			printf(" [%s, %02x] ->", temp->content, temp->op_code);
 			temp = temp->next;
 		}
-		if(op_table[i]->head != NULL) {
-			printf("%x %s\n", temp->op_code, temp->content);
+		if(op_table[i]->head != NULL) {	//print last node
+			printf(" [%s, %02x]\n", temp->content, temp->op_code);
 		}
 	}
 }
 
-void free_list(List *list)
+void free_list(List *list)	//free list
 {
 	if(list == NULL) return;
 	if(list->head == NULL) {
@@ -137,9 +136,7 @@ void free_list(List *list)
 		list->head = list->head->next;
 		free(temp);
 	}
-	free(list->head->content);
 	free(list);
-	
 	return;
 }
 
