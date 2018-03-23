@@ -2,7 +2,6 @@
 
 void copy_str(char *from, char **to)
 {
-	int i;
 	int length = strlen(from);
 	*to = (char *)malloc(sizeof(char)*length+1);
 	strncpy(*to, from, length);
@@ -99,17 +98,57 @@ void print_opTable(List **op_table)	//need to fix
 {
 	int i;
 	Node *temp;
+	int hash;
 	for(i=0; i<20; i++) {
 		temp = op_table[i]->head;
 		if(temp == NULL) {
+			printf("%d : empty\n", i);
 			continue;
 		}
+		if(temp->next != NULL) {
+			printf("%d : [%s, %x] ->", i, temp->content, temp->op_code);
+		} else {
+			printf("%d : [%s, %x]\n", i, temp->content, temp->op_code);
+			continue;
+		}
+		temp = temp->next;
 		while(temp->next != NULL) {
-			printf("%x %s %d\n", temp->op_code, temp->content, i);
+			printf(" [%s, %x] ->", temp->content, temp->op_code);
 			temp = temp->next;
 		}
 		if(op_table[i]->head != NULL) {
 			printf("%x %s\n", temp->op_code, temp->content);
 		}
 	}
+}
+
+void free_list(List *list)
+{
+	if(list == NULL) return;
+	if(list->head == NULL) {
+		free(list);
+		return;
+	}
+	Node *temp;
+	temp = list->head;
+	while(temp->next != NULL) {
+		temp = list->head;
+		free(temp->content);
+		list->head = list->head->next;
+		free(temp);
+	}
+	free(list->head->content);
+	free(list);
+	
+	return;
+}
+
+
+void free_hashTable(List **hashTable)
+{
+	int i;
+	for(i=0; i<20; i++) {
+		free_list(hashTable[i]);
+	}
+	return;
 }
