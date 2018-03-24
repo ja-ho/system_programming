@@ -22,9 +22,11 @@ int tokenizer(char *str, char **token)
 
 int command(unsigned char memory[][MEM_ROW], List *history_list, List **op_table, char **token, int token_number)
 {
-	static int address = 0;
+	static int address = 0;					//internal address pointer
+	int start, end, value;					//change into hex numbers
+	char *check1, *check2, *check3;			//check whether change is ok
 	//distinguish command by token number
-	if(token_number == 1) {
+	if(token_number == 1) {					//help, dir, quit, history, dump, reset, opcodelist
 		if(!strcmp(token[0], "h") || !strcmp(token[0], "help")) {
 			printf("h[elp]\n");
 			printf("d[ir]\n");
@@ -46,23 +48,34 @@ int command(unsigned char memory[][MEM_ROW], List *history_list, List **op_table
 		} else if (!strcmp(token[0], "hi") || !strcmp(token[0], "history")) {
 			print_list(history_list);		
 		} else if (!strcmp(token[0], "du") || !strcmp(token[0], "dump")) {
+			memory_dump(memory, &address);
 			int start, end;
-			start = (int)strtol(token[1], NULL, 16);
 			end = (int)strtol(token[2], NULL, 16);
 		} else if (!strcmp(token[0], "reset")) {
-		
+				
 		} else if (!strcmp(token[0], "opcodelist")) {
 			print_op_table(op_table);
 		} 
-	} else if (token_number == 2) {		//TODO: need to check upper case
+	} else if (token_number == 2) {			  //opcode mnemonic, dump start 	//TODO: need to check upper case
 		int op_code;
 		if(!strcmp(token[0], "opcode")) {
 			op_code = find_opcode(op_table, token[1]);
 			printf("opcode is %d\n", op_code);
+		} else if(!strcmp(token[0], "du") || !strcmp(token[0], "dump")) {
+			start = (int)strtol(token[1], &check1, 16);
+			//if(					//need to check?
+			memory_start_dump(memory, start, &address);
 		}
-	} else if (token_number == 3) {
-	
-	} else if (token_number == 4) {
+	} else if (token_number == 3) {			  //(dump start, end), (edit address, value)
+		if(!strcmp(token[0], "du") || !strcmp(token[0], "dump")) {
+		
+		} else if(!strcmp(token[1], "e") || !strcmp(token[1], "edit")) {
+			
+		}
+	} else if (token_number == 4) {				//fill start, end, value
+		if(!strcmp(token[0], "f") || !strcmp(token[0], "fill")) {
+		
+		}
 		
 	}
 
