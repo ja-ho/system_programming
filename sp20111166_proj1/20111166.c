@@ -3,7 +3,6 @@
 int main() {
 	List *history_list;
 	List *op_table[20];
-	
 	unsigned char memory[MEM_COL][MEM_ROW];	//1MB memory
 	char command_str[MAX_STR];
 	char *token[MAX_TOKEN];	//number of token is 4

@@ -25,6 +25,7 @@ int command(unsigned char memory[][MEM_ROW], List *history_list, List **op_table
 	static int address = 0;					//internal address pointer
 	int start, end, value;					//change into hex numbers
 	char *check1, *check2, *check3;			//check whether change is ok
+	int status=0;
 	//distinguish command by token number
 	if(token_number == 1) {					//help, dir, quit, history, dump, reset, opcodelist
 		if(!strcmp(token[0], "h") || !strcmp(token[0], "help")) {
@@ -48,11 +49,9 @@ int command(unsigned char memory[][MEM_ROW], List *history_list, List **op_table
 		} else if (!strcmp(token[0], "hi") || !strcmp(token[0], "history")) {
 			print_list(history_list);		
 		} else if (!strcmp(token[0], "du") || !strcmp(token[0], "dump")) {
-			memory_dump(memory, &address);
-			int start, end;
-			end = (int)strtol(token[2], NULL, 16);
+			status = memory_dump(memory, &address);
 		} else if (!strcmp(token[0], "reset")) {
-				
+			memory_reset(memory);	
 		} else if (!strcmp(token[0], "opcodelist")) {
 			print_op_table(op_table);
 		} 
@@ -63,22 +62,35 @@ int command(unsigned char memory[][MEM_ROW], List *history_list, List **op_table
 			printf("opcode is %d\n", op_code);
 		} else if(!strcmp(token[0], "du") || !strcmp(token[0], "dump")) {
 			start = (int)strtol(token[1], &check1, 16);
-			//if(					//need to check?
-			memory_start_dump(memory, start, &address);
+			if(*check1 == '\0') {
+				status = memory_start_dump(memory, start, &address);
+			}
 		}
 	} else if (token_number == 3) {			  //(dump start, end), (edit address, value)
 		if(!strcmp(token[0], "du") || !strcmp(token[0], "dump")) {
-		
+			start = (int)strtol(token[1], &check1, 16);
+			end = (int)strtol(token[2], &check2, 16);
+			if(*check1 == '\0' && *check2 == '\0') {
+				status = memory_range_dump(memory, start, end, &address);
+			}
 		} else if(!strcmp(token[1], "e") || !strcmp(token[1], "edit")) {
-			
+			value = (int)strtol(token[2], &check1, 16);
+			if(*check1 == '\0') {
+				status = memory_edit(memory, address, value);
+			}
 		}
 	} else if (token_number == 4) {				//fill start, end, value
 		if(!strcmp(token[0], "f") || !strcmp(token[0], "fill")) {
-		
+			start = (int)strtol(token[1], &check1, 16);
+			end = (int)strtol(token[2], &check2, 16);
+			value = (int)strtol(token[3], &check3, 16);
+			if(*check1 == '\0' && *check2 == '\0' && *check3 == '\0') {
+				status = memory_fill(memory, start, end, value);
+			}
 		}
 		
 	}
 
-	return 0;
+	return status;
 }
 

@@ -3,7 +3,7 @@
 OBJS = memory_management.o etc_function.o data_structure.o shell.o 20111166.o
 CC=gcc
 CFLAGS= -Wall
-TARGET = 20111166
+TARGET = 20111166.out
 
 
 all: $(TARGET)

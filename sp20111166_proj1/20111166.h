@@ -60,4 +60,6 @@ int handle_error(error_num num);
 int memory_dump(unsigned char memory[][MEM_ROW], int *address);
 int memory_start_dump(unsigned char memory[][MEM_ROW], int start, int *address);
 int memory_range_dump(unsigned char memory[][MEM_ROW], int start, int end, int *address);
-
+int memory_edit(unsigned char memory[][MEM_ROW], int address, int value);
+int memory_fill(unsigned char memory[][MEM_ROW], int start, int end, int value);
+void memory_reset(unsigned char memory[][MEM_ROW]);
