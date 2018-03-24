@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h>
+#include <sys/stat.h>
 
-#define max_token 6
+
+#define MAX_TOKEN 6
+#define MAX_STR 256
 #define MEM_ROW 16
 #define MEM_COL 65536
 
@@ -20,6 +24,12 @@ typedef struct _List {
 } List;
 /////////linked-list
 
+typedef enum {
+	out_of_boundary,
+	
+} error_num;
+
+
 
 void copy_str(char *from, char **to);
 void list_init(List *list);
@@ -35,5 +45,14 @@ void free_hashTable(List **hashTable);
 
 
 int tokenizer();
-int command(unsigned char memory[][MEM_COL], List *history_list, List **op_table, char **token, int token_number);
+int command(unsigned char memory[][MEM_ROW], List *history_list, List **op_table, char **token, int token_number);
 
+
+
+
+//////etc_functions
+int dir(void);
+int find_opcode(List **opTable, char *mnemonic);
+
+///memory_management
+int handle_error(error_num num);

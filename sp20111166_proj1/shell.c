@@ -18,8 +18,11 @@ int tokenizer(char *str, char **token)
 
 
 
-int command(unsigned char memory[][MEM_COL], List *history_list, List **op_table, char **token, int token_number)
+
+
+int command(unsigned char memory[][MEM_ROW], List *history_list, List **op_table, char **token, int token_number)
 {
+	static int address = 0;
 	//distinguish command by token number
 	if(token_number == 1) {
 		if(!strcmp(token[0], "h") || !strcmp(token[0], "help")) {
@@ -34,7 +37,7 @@ int command(unsigned char memory[][MEM_COL], List *history_list, List **op_table
 			printf("opcode mnemonic\n");
 			printf("opcodelist\n");
 		} else if (!strcmp(token[0], "d") || !strcmp(token[0], "dir")) {
-		
+			dir();
 		} else if (!strcmp(token[0], "q") || !strcmp(token[0], "quit")) {
 			//before exit, free all assigned memory
 			free_list(history_list);
@@ -42,13 +45,19 @@ int command(unsigned char memory[][MEM_COL], List *history_list, List **op_table
 			exit(0);	
 		} else if (!strcmp(token[0], "hi") || !strcmp(token[0], "history")) {
 			print_list(history_list);		
+		} else if (!strcmp(token[0], "du") || !strcmp(token[0], "dump")) {
+			
 		} else if (!strcmp(token[0], "reset")) {
 		
 		} else if (!strcmp(token[0], "opcodelist")) {
 			print_op_table(op_table);
 		} 
-	} else if (token_number == 2) {
-	
+	} else if (token_number == 2) {		//TODO: need to check upper case
+		int op_code;
+		if(!strcmp(token[0], "opcode")) {
+			op_code = find_opcode(op_table, token[1]);
+			printf("opcode is %d\n", op_code);
+		}
 	} else if (token_number == 3) {
 	
 	} else if (token_number == 4) {
