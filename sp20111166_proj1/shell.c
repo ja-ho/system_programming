@@ -46,7 +46,9 @@ int command(unsigned char memory[][MEM_ROW], List *history_list, List **op_table
 		} else if (!strcmp(token[0], "hi") || !strcmp(token[0], "history")) {
 			print_list(history_list);		
 		} else if (!strcmp(token[0], "du") || !strcmp(token[0], "dump")) {
-			
+			int start, end;
+			start = (int)strtol(token[1], NULL, 16);
+			end = (int)strtol(token[2], NULL, 16);
 		} else if (!strcmp(token[0], "reset")) {
 		
 		} else if (!strcmp(token[0], "opcodelist")) {

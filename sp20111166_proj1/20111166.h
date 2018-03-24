@@ -53,6 +53,11 @@ int command(unsigned char memory[][MEM_ROW], List *history_list, List **op_table
 //////etc_functions
 int dir(void);
 int find_opcode(List **opTable, char *mnemonic);
+int handle_error(error_num num);
+
 
 ///memory_management
-int handle_error(error_num num);
+int memory_dump(unsigned char memory[][MEM_ROW], int *address);
+int memory_start_dump(unsigned char memory[][MEM_ROW], int start, int *address);
+int memory_range_dump(unsigned char memory[][MEM_ROW], int start, int end, int *address);
+
