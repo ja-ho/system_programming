@@ -1,5 +1,10 @@
 #include "20111166.h"
 
+/*---------------------*/
+/*함수 : tokenizer*/
+/*목적 : str를 나눠 token에 저장한다*/
+/*리턴값: token의 갯수*/
+/*---------------------*/
 int tokenizer(char *str, char **token)
 {
 	int i=0;
@@ -15,7 +20,12 @@ int tokenizer(char *str, char **token)
 	return (i-1);	//return number of token
 }
 
-int token_without_comma(char *str)			//check that input is right or not about comma
+/*---------------------*/
+/*함수 : count_token_with_comma*/
+/*목적 : comma에 따라 토큰의 갯수를 센다*/
+/*리턴값: 토큰의 갯수*/
+/*---------------------*/
+int count_token_with_comma(char *str)			//check that input is right or not about comma
 {
 	int i=0;
 	char *token;
@@ -28,7 +38,11 @@ int token_without_comma(char *str)			//check that input is right or not about co
 	return i;
 }
 
-
+/*---------------------*/
+/*함수 : command*/
+/*목적 : 저장된 토큰에 따라 명령을 수행한다*/
+/*리턴값: 0 = 정상, -1 = error*/
+/*---------------------*/
 int command(unsigned char memory[][MEM_ROW], List *history_list, List **op_table, char **token, int token_number, char *history_temp)	//history_temp : to handle history. if input is "hi" or "history",
 {																																		//input the command into the history list before print it.
 	static int address = 0;					//internal address pointer

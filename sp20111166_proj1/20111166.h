@@ -4,13 +4,13 @@
 #include <dirent.h>
 #include <sys/stat.h>
 
-
+/*정의되는 상수*/
 #define MAX_TOKEN 6
 #define MAX_STR 256
 #define MEM_ROW 16
 #define MEM_COL 65536
 
-
+/*정의되는 구조체*/
 typedef struct _Node {
 	int op_code;
 	char *content;
@@ -29,11 +29,11 @@ typedef enum {
 	wrong_input,
 	not_found,
 	not_number,
+	not_allocate,
 } error_num;
 ///////error enum type
 
-
-void copy_str(char *from, char **to);
+/*함수 원형*/
 void list_init(List *list);
 int list_insert(List *list, char *str, int op_code);
 int hash_function(char *s);
@@ -47,11 +47,12 @@ void free_hashTable(List **hashTable);
 
 
 int tokenizer(char *str, char **token);
-int token_without_comma(char *str);
+int count_token_with_comma(char *str);
 int command(unsigned char memory[][MEM_ROW], List *history_list, List **op_table, char **token, int token_number, char *history_temp);
 /////////////shell
 
 
+void copy_str(char *from, char **to);
 int dir(void);
 int find_opcode(List **opTable, char *mnemonic);
 int handle_error(error_num num);

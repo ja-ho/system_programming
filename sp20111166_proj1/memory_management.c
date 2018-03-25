@@ -1,5 +1,10 @@
 #include "20111166.h"
 
+/*---------------------*/
+/*함수 : memory_range_dump*/
+/*목적 : 범위 안의 메모리 값을 출력한다*/
+/*리턴값: 0= 정상, -1 = 비정상*/
+/*---------------------*/
 int memory_range_dump(unsigned char memory[][MEM_ROW], int start, int end, int *address) {		//dump memory from start, to end
 	int rows, cols, end_rows;
 	int range;
@@ -39,6 +44,11 @@ int memory_range_dump(unsigned char memory[][MEM_ROW], int start, int end, int *
 	return 0;
 }
 
+/*---------------------*/
+/*함수 : memory_dump*/
+/*목적 : address부터 160개의 메모리값을 출력한다*/
+/*리턴값: 0= 정상, -1 = 비정상*/
+/*---------------------*/
 int memory_dump(unsigned char memory[][MEM_ROW], int *address)
 {
 	if(*address + 159 > 0xFFFFF) {
@@ -48,6 +58,11 @@ int memory_dump(unsigned char memory[][MEM_ROW], int *address)
 	return 0;
 }
 
+/*---------------------*/
+/*함수 : memory_start_dump*/
+/*목적 : start address부터 160개의 메모리 값을 출력한다*/
+/*리턴값: 0= 정상, -1 = 비정상*/
+/*---------------------*/
 int memory_start_dump(unsigned char memory[][MEM_ROW], int start, int *address)
 {
 	if(start + 159 > 0xFFFFF) {
@@ -57,6 +72,12 @@ int memory_start_dump(unsigned char memory[][MEM_ROW], int start, int *address)
 	}
 }
 
+
+/*---------------------*/
+/*함수 : memory_edit*/
+/*목적 : address의 메모리 값을 수정한다*/
+/*리턴값: 0= 정상, -1 = 비정상*/
+/*---------------------*/
 int memory_edit(unsigned char memory[][MEM_ROW], int address, int value)
 {
 	int rows, cols;
@@ -70,6 +91,11 @@ int memory_edit(unsigned char memory[][MEM_ROW], int address, int value)
 	return 0;
 }
 
+/*---------------------*/
+/*함수 : memory_fill*/
+/*목적 : 범위 안의 메모리 값을 value로 채운다*/
+/*리턴값: 0= 정상, -1 = 비정상*/
+/*---------------------*/
 int memory_fill(unsigned char memory[][MEM_ROW], int start, int end, int value)
 {
 	int rows, cols, end_rows, range;
@@ -96,6 +122,11 @@ int memory_fill(unsigned char memory[][MEM_ROW], int start, int end, int value)
 	return 0;
 }
 
+/*---------------------*/
+/*함수 : memory_reset*/
+/*목적 : 메모리 값을 전부 0으로 초기화한다*/
+/*리턴값: 없음*/
+/*---------------------*/
 void memory_reset(unsigned char memory[][MEM_ROW]) 
 {
 	int i, j;

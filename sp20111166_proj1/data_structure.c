@@ -1,13 +1,10 @@
 #include "20111166.h"
 
-void copy_str(char *from, char **to)
-{
-	int length = strlen(from);
-	*to = (char *)malloc(sizeof(char)*length+1);
-	strncpy(*to, from, length+1);
-}
-
-
+/*---------------------*/
+/*함수 : list_init*/
+/*목적 : list를 초기화한다*/
+/*리턴값: 없음*/
+/*---------------------*/
 void list_init(List *list)
 {
 	list->head = NULL;
@@ -16,13 +13,17 @@ void list_init(List *list)
 
 
 
+/*---------------------*/
+/*함수 : list_insert*/
+/*목적 : list에 노드를 추가한다*/
+/*리턴값: 0 = 정상, -1: error */
+/*---------------------*/
 int list_insert(List *list, char *str, int op_code)
 {
 	Node *temp = (Node *)malloc(sizeof(Node));
 	
 	if(temp == NULL) {
-		printf("memory allocation fail\n");
-		return 0;
+		return handle_error(not_allocate);
 	}
 
 	copy_str(str, &temp->content);
@@ -39,6 +40,11 @@ int list_insert(List *list, char *str, int op_code)
 	return 0;
 }
 
+/*---------------------*/
+/*함수 : print_list*/
+/*목적 : list를 출력한다*/
+/*리턴값: 없음*/
+/*---------------------*/
 void print_list(List *list)
 {
 	Node *temp;
@@ -57,10 +63,15 @@ void print_list(List *list)
 }
 
 
+/*---------------------*/
+/*함수 : hash_function*/
+/*목적 : hash값을 생성*/
+/*리턴값: hash*/
+/*---------------------*/
 int hash_function(char *s)
 {
 	int i;
-	int g = 31;						//hash constant.
+	const int g = 31;						//hash constant.
 	int hash=0;						//hash index
 	int length = strlen(s);
 	for(i=0; i < length; i++) {
@@ -70,6 +81,11 @@ int hash_function(char *s)
 	return hash;
 }
 
+/*---------------------*/
+/*함수 : make_hashTable*/
+/*목적 : hashtable을 초기화하고 구성한다*/
+/*리턴값: 없*/
+/*----------음-----------*/
 void make_hashTable(List **hashTable)
 {
 	FILE *fp;
@@ -96,6 +112,11 @@ void make_hashTable(List **hashTable)
 	return;
 }
 
+/*---------------------*/
+/*함수 : print_op_table*/
+/*목적 : optable을 출력한다*/
+/*리턴값: 없음*/
+/*---------------------*/
 void print_op_table(List **op_table)	//print table
 {
 	int i;
@@ -123,6 +144,11 @@ void print_op_table(List **op_table)	//print table
 	}
 }
 
+/*---------------------*/
+/*함수 :free_list*/
+/*목적 : list 할당된 메모리를 해제한다*/
+/*리턴값: 없음*/
+/*---------------------*/
 void free_list(List *list)	//free list
 {
 	if(list == NULL) return;
@@ -143,6 +169,11 @@ void free_list(List *list)	//free list
 }
 
 
+/*---------------------*/
+/*함수 : free_hashTable*/
+/*목적 : hashtable 할당된 메모리를 해제한다.*/
+/*리턴값: 없음*/
+/*---------------------*/
 void free_hashTable(List **hashTable)
 {
 	int i;

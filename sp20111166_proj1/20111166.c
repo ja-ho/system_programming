@@ -1,6 +1,8 @@
 #include "20111166.h"
 
+/*프로그램 시작*/
 int main() {
+	/*변수*/
 	List *history_list;
 	List *op_table[20];
 
@@ -8,7 +10,7 @@ int main() {
 	char command_str[MAX_STR];
 	char *token[MAX_TOKEN];	//max number of tokens is 4
 	char *temp, *comp_temp;
-	int token_number, without_comma_token_number;
+	int token_number, comma_token_number;
 
 	history_list = (List *)malloc(sizeof(List));
 	list_init(history_list);
@@ -20,11 +22,11 @@ int main() {
 		command_str[strlen(command_str)-1] = '\0';
 		copy_str(command_str, &temp);
 		copy_str(command_str, &comp_temp);
-		token_number = tokenizer(command_str, token);		//tokenize the command and return the number of tokens
-		without_comma_token_number = token_without_comma(comp_temp);		//check that input is right or not(about comma)
+		token_number = tokenizer(temp, token);		//tokenize the command and return the number of tokens
+		comma_token_number = count_token_with_comma(comp_temp);		//check that input is right or not(about comma)
 		
 
-		if(token_number != without_comma_token_number) {					//check if num of comma is not same
+		if(token_number != comma_token_number) {					//check if num of comma is not same
 			handle_error(wrong_input);
 			continue;
 		}
@@ -33,8 +35,8 @@ int main() {
 			continue;
 		}
 
-		if(!command(memory, history_list, op_table, token, token_number, temp)) {		//process the command
-			list_insert(history_list, temp, 0);		//if there's no error, put the last command into the history list
+		if(!command(memory, history_list, op_table, token, token_number, command_str)) {		//process the command
+			list_insert(history_list, command_str, 0);		//if there's no error, put the last command into the history list
 		}
 	}
 			
