@@ -1,10 +1,10 @@
 #include "20111166.h"
 
-int memory_range_dump(unsigned char memory[][MEM_ROW], int start, int end, int *address) {
+int memory_range_dump(unsigned char memory[][MEM_ROW], int start, int end, int *address) {		//dump memory from start, to end
 	int rows, cols, end_rows;
 	int range;
 	int i,j;
-	if(start > 0xfffff || end > 0xfffff || (start > end) || start < 0 || end < 0) {
+	if(start > 0xfffff || end > 0xfffff || (start > end) || start < 0 || end < 0) {				//error handling(check the start, end, address are in the memory boundary)
 		return handle_error(out_of_boundary);
 	}
 	cols = start/16;	//start col
@@ -12,18 +12,18 @@ int memory_range_dump(unsigned char memory[][MEM_ROW], int start, int end, int *
 	end_rows = end%16;	//end col
 	range = end/16 - start/16 + 1;
 	for(i=cols; i<range + cols; i++) {
-		printf("%05x ", i*16);				//memory address
+		printf("%05X ", i*16);				//memory address
 
 		for(j=0; j<16; j++) {					//memory content
-			if((i==cols && j < rows) || (i == range + cols - 1 && j > end_rows)) {
+			if((i==cols && j < rows) || (i == range + cols - 1 && j > end_rows)) {		//handle the exception case(first, end last row)
 				printf("   ");
 			} else {
-				printf("%02x ", memory[i][j]);
+				printf("%02X ", memory[i][j]);
 			}
 		}
 		printf("; ");
 		for(j=0; j<16; j++) {					//print ascii code
-			if((i==cols && j<rows) || (i == range + cols - 1 && j > end_rows)) {
+			if((i==cols && j<rows) || (i == range + cols - 1 && j > end_rows)) {		//handle the exception case(first, end last row)
 				printf(".");
 			} else {
 				if(memory[i][j] >= 0x20 && memory[i][j] <= 0x7E) {

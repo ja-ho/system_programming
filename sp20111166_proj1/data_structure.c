@@ -45,6 +45,8 @@ void print_list(List *list)
 	int num;
 	temp = list->head;
 	num = 1;
+
+	if(temp == NULL) return;
 	
 	while(temp->next!=NULL) {
 		printf("%d %s\n", num++, temp->content);
@@ -58,11 +60,11 @@ void print_list(List *list)
 int hash_function(char *s)
 {
 	int i;
-	int g = 31;
-	int hash=0;
+	int g = 31;						//hash constant.
+	int hash=0;						//hash index
 	int length = strlen(s);
 	for(i=0; i < length; i++) {
-		hash = g * hash + s[i];
+		hash = g * hash + s[i];		//add each char digit. and multiply by g. so it doensn't allow any permutation overlap
 		hash = hash%20;
 	}
 	return hash;
@@ -87,7 +89,7 @@ void make_hashTable(List **hashTable)
 	}
 	while(fscanf(fp, "%x %s %s", &op_code, mnemonic, format) != EOF) {
 		int hash = hash_function(mnemonic);
-		list_insert(hashTable[hash], mnemonic, op_code);
+		list_insert(hashTable[hash], mnemonic, op_code);			//insert to the hashtable by hash_index which is from hash_function
 	}
 	
 	fclose(fp);
@@ -105,18 +107,18 @@ void print_op_table(List **op_table)	//print table
 			continue;
 		}
 		if(temp->next != NULL) {	//case1: theres' next node
-			printf("%d : [%s, %02x] ->", i, temp->content, temp->op_code);
+			printf("%d : [%s, %02X] ->", i, temp->content, temp->op_code);
 		} else {					//case2: no next node
-			printf("%d : [%s, %02x]\n", i, temp->content, temp->op_code);
+			printf("%d : [%s, %02X]\n", i, temp->content, temp->op_code);
 			continue;
 		}
 		temp = temp->next;
 		while(temp->next != NULL) {
-			printf(" [%s, %02x] ->", temp->content, temp->op_code);
+			printf(" [%s, %02X] ->", temp->content, temp->op_code);
 			temp = temp->next;
 		}
 		if(op_table[i]->head != NULL) {	//print last node
-			printf(" [%s, %02x]\n", temp->content, temp->op_code);
+			printf(" [%s, %02X]\n", temp->content, temp->op_code);
 		}
 	}
 }
@@ -124,13 +126,13 @@ void print_op_table(List **op_table)	//print table
 void free_list(List *list)	//free list
 {
 	if(list == NULL) return;
-	if(list->head == NULL) {
+	if(list->head == NULL) {	//there's nothing in the list
 		free(list);
 		return;
 	}
 	Node *temp;
 	temp = list->head;
-	while(temp->next != NULL) {
+	while(temp->next != NULL) {		//free content, node
 		temp = list->head;
 		free(temp->content);
 		list->head = list->head->next;

@@ -3,11 +3,12 @@
 int main() {
 	List *history_list;
 	List *op_table[20];
+
 	unsigned char memory[MEM_COL][MEM_ROW];	//1MB memory
 	char command_str[MAX_STR];
-	char *token[MAX_TOKEN];	//number of token is 4
-	
-	int token_number;
+	char *token[MAX_TOKEN];	//max number of tokens is 4
+	char *temp, *comp_temp;
+	int token_number, without_comma_token_number;
 
 	history_list = (List *)malloc(sizeof(List));
 	list_init(history_list);
@@ -17,11 +18,23 @@ int main() {
 		printf("sicsim> ");
 		fgets(command_str, sizeof(command_str), stdin);
 		command_str[strlen(command_str)-1] = '\0';
-		token_number = tokenizer(command_str, token);
-		if(token_number == 0) continue;
-		if(token_number > 4) continue;
-		if(!command(memory, history_list, op_table, token, token_number)) {
-			list_insert(history_list, command_str, 0);
+		copy_str(command_str, &temp);
+		copy_str(command_str, &comp_temp);
+		token_number = tokenizer(command_str, token);		//tokenize the command and return the number of tokens
+		without_comma_token_number = token_without_comma(comp_temp);		//check that input is right or not(about comma)
+		
+
+		if(token_number != without_comma_token_number) {					//check if num of comma is not same
+			handle_error(wrong_input);
+			continue;
+		}
+		if(token_number == 0 || token_number >4) {							//check if num of token is too small or too much
+			handle_error(wrong_input);
+			continue;
+		}
+
+		if(!command(memory, history_list, op_table, token, token_number, temp)) {		//process the command
+			list_insert(history_list, temp, 0);		//if there's no error, put the last command into the history list
 		}
 	}
 			

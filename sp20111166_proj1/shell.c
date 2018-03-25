@@ -3,25 +3,34 @@
 int tokenizer(char *str, char **token)
 {
 	int i=0;
-	const char *delim = " ,\t\n";
-	token[i++] = strtok(str, delim);
+	char *delim = " ,\t\n";				//first delimeter.  tokenize except , \t, \n.
+	token[i++] = strtok(str, delim);			//save the token into the token[i]
 	while(token[i-1] != NULL) {
-		if(i >= 6) break; 
+		if(i >= 5) return 5; 
 		token[i++] = strtok(NULL, delim);
 	}
 	if(token[i-2] && token[i-2][strlen(token[i-2])-1] == '\n') {		//remove end of token '\n'
-		token[i-2][strlen(token[i-2])-1] = '\0';		//need to check
+		token[i-2][strlen(token[i-2])-1] = '\0';	
 	}
+	return (i-1);	//return number of token
+}
 
-	return (i-1);	//number of token
+int token_without_comma(char *str)			//check that input is right or not about comma
+{
+	int i=0;
+	char *token;
+	strsep(&str, " ,\t\n");
+	i++;
+	while ((token = strsep(&str, ",")) != NULL) {
+		i++;
+	}
+	
+	return i;
 }
 
 
-
-
-
-int command(unsigned char memory[][MEM_ROW], List *history_list, List **op_table, char **token, int token_number)
-{
+int command(unsigned char memory[][MEM_ROW], List *history_list, List **op_table, char **token, int token_number, char *history_temp)	//history_temp : to handle history. if input is "hi" or "history",
+{																																		//input the command into the history list before print it.
 	static int address = 0;					//internal address pointer
 	int start, end, value;					//change into hex numbers
 	char *check1, *check2, *check3;			//check whether change is ok
@@ -47,6 +56,8 @@ int command(unsigned char memory[][MEM_ROW], List *history_list, List **op_table
 			free_hashTable(op_table);
 			exit(0);	
 		} else if (!strcmp(token[0], "hi") || !strcmp(token[0], "history")) {
+			list_insert(history_list, history_temp, 0);
+			status = -1;				//to not write history again in the history list
 			print_list(history_list);		
 		} else if (!strcmp(token[0], "du") || !strcmp(token[0], "dump")) {
 			status = memory_dump(memory, &address);
@@ -54,17 +65,27 @@ int command(unsigned char memory[][MEM_ROW], List *history_list, List **op_table
 			memory_reset(memory);	
 		} else if (!strcmp(token[0], "opcodelist")) {
 			print_op_table(op_table);
-		} 
-	} else if (token_number == 2) {			  //opcode mnemonic, dump start 	//TODO: need to check upper case
+		} else {
+			status = handle_error(wrong_input);
+		}
+	} else if (token_number == 2) {			  //opcode mnemonic, dump start 	//TODo: need to check upper case
 		int op_code;
 		if(!strcmp(token[0], "opcode")) {
 			op_code = find_opcode(op_table, token[1]);
-			printf("opcode is %d\n", op_code);
+			if(op_code == -1) {
+				status = handle_error(not_found);
+			} else {
+				printf("opcode is %02X\n", op_code);
+			}
 		} else if(!strcmp(token[0], "du") || !strcmp(token[0], "dump")) {
 			start = (int)strtol(token[1], &check1, 16);
 			if(*check1 == '\0') {
 				status = memory_start_dump(memory, start, &address);
+			} else {
+				status = handle_error(not_number);
 			}
+		} else {
+			status = handle_error(wrong_input);
 		}
 	} else if (token_number == 3) {			  //(dump start, end), (edit address, value)
 		if(!strcmp(token[0], "du") || !strcmp(token[0], "dump")) {
@@ -72,12 +93,20 @@ int command(unsigned char memory[][MEM_ROW], List *history_list, List **op_table
 			end = (int)strtol(token[2], &check2, 16);
 			if(*check1 == '\0' && *check2 == '\0') {
 				status = memory_range_dump(memory, start, end, &address);
+			} else {
+				status = handle_error(not_number);
 			}
-		} else if(!strcmp(token[1], "e") || !strcmp(token[1], "edit")) {
-			value = (int)strtol(token[2], &check1, 16);
-			if(*check1 == '\0') {
+		} else if(!strcmp(token[0], "e") || !strcmp(token[0], "edit")) {
+			address = (int)strtol(token[1], &check1, 16);
+			value = (int)strtol(token[2], &check2, 16);
+			if(*check1 == '\0' && *check2 == '\0') {
 				status = memory_edit(memory, address, value);
+			} else {
+				status = handle_error(not_number);
 			}
+		} else {
+			status = handle_error(wrong_input);
+			
 		}
 	} else if (token_number == 4) {				//fill start, end, value
 		if(!strcmp(token[0], "f") || !strcmp(token[0], "fill")) {
@@ -86,11 +115,13 @@ int command(unsigned char memory[][MEM_ROW], List *history_list, List **op_table
 			value = (int)strtol(token[3], &check3, 16);
 			if(*check1 == '\0' && *check2 == '\0' && *check3 == '\0') {
 				status = memory_fill(memory, start, end, value);
+			} else {
+				status = handle_error(not_number);
 			}
-		}
-		
+		} else {
+			status = handle_error(wrong_input);
+		}	
 	}
-
 	return status;
 }
 

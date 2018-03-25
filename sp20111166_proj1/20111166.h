@@ -14,7 +14,7 @@
 typedef struct _Node {
 	int op_code;
 	char *content;
-	struct _Node *next;	//check Node *pNext
+	struct _Node *next;
 } Node;
 
 
@@ -26,9 +26,11 @@ typedef struct _List {
 
 typedef enum {
 	out_of_boundary,
-	
+	wrong_input,
+	not_found,
+	not_number,
 } error_num;
-
+///////error enum type
 
 
 void copy_str(char *from, char **to);
@@ -44,22 +46,23 @@ void free_hashTable(List **hashTable);
 
 
 
-int tokenizer();
-int command(unsigned char memory[][MEM_ROW], List *history_list, List **op_table, char **token, int token_number);
+int tokenizer(char *str, char **token);
+int token_without_comma(char *str);
+int command(unsigned char memory[][MEM_ROW], List *history_list, List **op_table, char **token, int token_number, char *history_temp);
+/////////////shell
 
 
-
-
-//////etc_functions
 int dir(void);
 int find_opcode(List **opTable, char *mnemonic);
 int handle_error(error_num num);
+//////etc_function
 
 
-///memory_management
+
 int memory_dump(unsigned char memory[][MEM_ROW], int *address);
 int memory_start_dump(unsigned char memory[][MEM_ROW], int start, int *address);
 int memory_range_dump(unsigned char memory[][MEM_ROW], int start, int end, int *address);
 int memory_edit(unsigned char memory[][MEM_ROW], int address, int value);
 int memory_fill(unsigned char memory[][MEM_ROW], int start, int end, int value);
 void memory_reset(unsigned char memory[][MEM_ROW]);
+///memory_management
